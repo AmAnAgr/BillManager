@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Bill Entry</title>
+    <link rel="stylesheet" href="/static/css/account.css">
+</head>
+<body>
+	<table width="100%">
+		<caption>Entry No. <b id="entry_no" >{{ entry_no }}</b></caption>
+		<tr>
+			<td><label>Invoice No.</label>&nbsp;&nbsp;&nbsp;&nbsp;<input id="invoice" type="text"></td>
+			<td><label>Date</label>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="date" id="d1" onchange="updateD2()" value={{ date }}></td>
+		</tr>
+		<tr>  
+			<td><label>Mill</label>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" onchange="popSearch(0)" id="mill" value="{{ last.mill.code }}"></td>
+			<td><label>Buyer</label>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" onchange="popSearch(1)" id="buyer" value="{{ last.buyer.code }}"></td>
+			<td><label>Tranport</label>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input onchange="popSearch(2)" id="trans" value="{{ last.transport }}" type="text"></td>
+		</tr>
+		<tr>
+			<td><label>L.No.</label>&nbsp;&nbsp;&nbsp;&nbsp;<input id="lno" value="{{ last.l_no }}" type="text"></td>
+			<td><label>L.Date</label>&nbsp;&nbsp;&nbsp;&nbsp;<input id="d2" type="date"></td>
+		</tr>				
+	</table>
+	<br>
+	<br>
+	<br>
+	<table border="1px black" width="80%" align="center">
+		<caption>Item(s):</caption>
+		<tr>
+			<th>S.No.</th>
+			<th>Name</th>
+			<th>type</th>
+			<th>no.</th>
+			<th>bail</th>
+			<th>quantity</th>
+			<th>price</th>
+			<th>Total</th>
+		</tr>
+		<tr>
+			<td><input id="sno" value="1" type="text"></td>
+			<td><input id="name" type="text"></td>
+			<td><input id="type" type="text"></td>
+			<td><input id="no" type="text"></td>
+			<td><input id="bail" type="text"></td>
+			<td><input id="quantity" onchange="calcTot()" value="0" type="text"></td>
+			<td><input id="price" onchange="calcTot()" value="0" type="text"></td>
+			<td><input id="total" value="0" type="text"></td>
+		</tr>
+	</table>
+<br>
+<br>
+<br>
+<br>
+	<center>
+		<input type="submit" onclick="sendData()" value="Save">	
+	</center>
+
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <input type="text" id="myInput" onkeypress="CheckEnter(event)" onfocus ="millFunction()" onkeyup="millFunction()" placeholder="Search for names..">
+
+    <ul id="myUL">
+
+
+        <li><a  style="background:grey;" href="#">Transport</a></li>
+
+        {% for t in transp %}
+            
+        <li class="trans"><a href="#">{{ t.name }}</a></li>
+
+        {% endfor %}
+        
+        <li><a  style="background:grey;" href="#">Buyers</a></li>
+
+        {% for b in buyer %}
+            
+        <li class="buyer"><a href="#">{{ b.name }} &nbsp;&nbsp;|  <span>{{ b.code }}</span></a></li>
+
+        {% endfor %}
+            
+
+        <li><a style="background:grey;" href="#">Mills</a></li>
+
+
+        {% for mill in mills %}
+    
+        <li class="mill"><a href="#">{{ mill.name }} &nbsp;&nbsp;|  <span>{{ mill.code }}</span></a></li>
+
+        {% endfor %}
+     
+
+    </ul>
+  </div>
+
+</div>
+
+
+<form action="/save/" id="submit" method="POST">{% csrf_token %}<input name="data" id="form" type="hidden"></form>
+
+<script src="/static/js/account.js"></script>
+<script>
+    function sendData() {
+
+    item = {
+        'sno'       : document.getElementById('sno').value,
+        'name'      : document.getElementById('name').value,
+        'type'      : document.getElementById('type').value,
+        'no'        : document.getElementById('no').value,
+        'bail'      : document.getElementById('bail').value,
+        'quantity'  : document.getElementById('quantity').value,
+        'price'     : document.getElementById('price').value,
+        'total'     : document.getElementById('total').value,
+
+
+    }
+
+    data = {
+
+        'entry_no' : document.getElementById("entry_no").innerHTML,
+        'invoice'  : document.getElementById("invoice").value,
+        'date'     : d1.value,
+        'mill'     : document.getElementById('mill').value,
+        'buyer'    : document.getElementById('buyer').value,
+        'trans'    : document.getElementById('trans').value,
+        'lno'      : document.getElementById('lno').value,
+        'ldate'    : d2.value,
+        'item'     : item,
+
+
+    }
+
+
+    var form = document.getElementById("form");
+
+    form.value = JSON.stringify(data);   
+    console.log(form.value);
+    var f = document.getElementById("submit");
+    f.submit();
+
+
+}
+</script>
+
+
+
+
+</body>
+</html>

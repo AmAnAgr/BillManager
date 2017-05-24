@@ -1,0 +1,15 @@
+Entry No
+Bill No/Invoice no.
+Mill Name
+Buyer name
+Date
+L.no.
+L.date
+Tranport
+item details:
+	SNO		name 	no. 	type 		no. of orders 		bailes 		price 		amount	
+
+Total	
+
+
+Save Quit Refresh New Prev 
